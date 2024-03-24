@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc64b28850ca0b842bbfbfc63c0a8209, type: 3}
   m_Name: Yellow
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: dc26fea90accfe149b14d010dc1d45cf, type: 3}
+  sprite: {fileID: 21300000, guid: 3d6a56bb0708a6046a5c5f18716e5aca, type: 3}
