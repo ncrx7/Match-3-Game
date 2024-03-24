@@ -159,7 +159,7 @@ MonoBehaviour:
   cellSize: 1
   originPosition: {x: 0, y: 0, z: 0}
   debug: 1
-  gemPrefab: {fileID: 5919131365628248570, guid: 940f69cdf7039b6458ee5384caecafac,
+  gemPrefab: {fileID: 8393199748797489919, guid: d89bcc6376fd8f8408b9407747151636,
     type: 3}
   gemTypes:
   - {fileID: 11400000, guid: 54629e40d60ec6141b262373091040ba, type: 2}
@@ -175,7 +175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 64854347}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18208218, y: 3.3523254, z: -1.9363651}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
