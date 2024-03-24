@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 [RequireComponent(typeof(PlayerInput))]
 public class InputReader : MonoBehaviour
@@ -21,15 +22,15 @@ public class InputReader : MonoBehaviour
         selectAction = playerInput.actions["Select"];
         fireAction = playerInput.actions["Fire"];
 
-        fireAction.performed += OnFire;
+        fireAction.performed += OnFired;
     }
 
     private void OnDestroy()
     {
-        fireAction.performed -= OnFire;
+        fireAction.performed -= OnFired;
     }
 
-    void OnFire(InputAction.CallbackContext obj)
+    void OnFired(InputAction.CallbackContext obj)
     {
         Fire?.Invoke();
     }

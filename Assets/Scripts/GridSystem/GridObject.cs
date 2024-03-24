@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GridObject<T>
 {
+    //We made this class generic so that it would be more dynamic and convenient for us to put another object instead of a gem.
     GridSystem2D<GridObject<T>> grid;
     int x;
     int y;
@@ -20,5 +21,10 @@ public class GridObject<T>
     public void SetValue(T gem)
     {
         this.gem = gem;
+    }
+
+    public T GetValue()
+    {
+        return gem;
     }
 }

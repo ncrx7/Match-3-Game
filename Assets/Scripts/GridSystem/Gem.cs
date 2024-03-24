@@ -17,4 +17,9 @@ public class Gem : MonoBehaviour
     {
         return type;
     }
+
+    public void DestroyGem()
+    {
+        Destroy(gameObject);
+    }
 }
