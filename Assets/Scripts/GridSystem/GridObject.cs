@@ -7,24 +7,24 @@ public class GridObject<T>
 {
     //We made this class generic so that it would be more dynamic and convenient for us to put another object instead of a gem.
     GridSystem2D<GridObject<T>> grid;
-    int x;
-    int y;
-    T gem;
+    private int _x;
+    private int _y;
+    private T _gem;
 
     public GridObject(GridSystem2D<GridObject<T>> grid, int x, int y)
     {
         this.grid = grid;
-        this.x = x;
-        this.y = y;
+        this._x = x;
+        this._y = y;
     }
 
     public void SetValue(T gem)
     {
-        this.gem = gem;
+        this._gem = gem;
     }
 
     public T GetValue()
     {
-        return gem;
+        return _gem;
     }
 }

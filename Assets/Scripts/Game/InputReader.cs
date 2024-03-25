@@ -8,26 +8,26 @@ using DG.Tweening;
 [RequireComponent(typeof(PlayerInput))]
 public class InputReader : MonoBehaviour
 {
-    PlayerInput playerInput;
-    InputAction selectAction;
-    InputAction fireAction;
+    PlayerInput _playerInput;
+    InputAction _selectAction;
+    InputAction _fireAction;
 
     public event Action Fire;
 
-    public Vector2 Selected => selectAction.ReadValue<Vector2>();
+    public Vector2 Selected => _selectAction.ReadValue<Vector2>(); // read mouse screen position
 
     private void Start()
     {
-        playerInput = GetComponent<PlayerInput>();
-        selectAction = playerInput.actions["Select"];
-        fireAction = playerInput.actions["Fire"];
+        _playerInput = GetComponent<PlayerInput>();
+        _selectAction = _playerInput.actions["Select"];
+        _fireAction = _playerInput.actions["Fire"];
 
-        fireAction.performed += OnFired;
+        _fireAction.performed += OnFired; // happens events when mouse 1 cliecked.
     }
 
     private void OnDestroy()
     {
-        fireAction.performed -= OnFired;
+        _fireAction.performed -= OnFired;
     }
 
     void OnFired(InputAction.CallbackContext obj)

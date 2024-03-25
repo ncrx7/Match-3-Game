@@ -6,16 +6,17 @@ using Utils.Extensions;
 
 public class Match3 : MonoBehaviour
 {
-    [SerializeField] int width = 8;
-    [SerializeField] int height = 8;
-    [SerializeField] float cellSize = 1f;
-    [SerializeField] Vector3 originPosition = Vector3.zero;
-    [SerializeField] bool debug = true;
+    [SerializeField] int _width = 8;
+    [SerializeField] int _height = 8;
+    [SerializeField] float _cellSize = 1f;
+    [SerializeField] Vector3 _originPosition = Vector3.zero;
+    [SerializeField] bool _debug = true;
 
-    [SerializeField] Gem gemPrefab;
-    [SerializeField] GemType[] gemTypes;
+    [SerializeField] Gem _gemPrefab;
+    [SerializeField] GemType[] _gemTypes;
+    [SerializeField] GameObject _explosion;
 
-    GridSystem2D<GridObject<Gem>> grid;
+    GridSystem2D<GridObject<Gem>> _grid;
 
     [SerializeField] InputReader inputReader;
 
@@ -24,7 +25,7 @@ public class Match3 : MonoBehaviour
     private void Start()
     {
         InitializeGrid();
-        inputReader.Fire += OnSelectGem;
+        inputReader.Fire += OnSelectGem; // when mouse 1 clicked
     }
 
     private void OnDestroy()
@@ -32,54 +33,62 @@ public class Match3 : MonoBehaviour
         inputReader.Fire -= OnSelectGem;
     }
 
+    // when mouse 1 clicked
     void OnSelectGem()
     {
-        var gridPos = grid.GetXY(Camera.main.ScreenToWorldPoint(inputReader.Selected));
+        var gridPos = _grid.GetXY(Camera.main.ScreenToWorldPoint(inputReader.Selected));
 
-        Debug.Log("gridpos: " + gridPos);
+        //Debug.Log("gridpos: " + gridPos);
         if (!IsValidPosition(gridPos) || IsEmptyPosition(gridPos)) return;
 
-        if (selectedGem == gridPos)
+        if (selectedGem == gridPos) //when clicked to same grid object two times.
         {
             DeselectGem();
+            AudioManager.Instance.PlayDeselectSound();
         }
-        else if (selectedGem == Vector2Int.one * -1)
+        else if (selectedGem == Vector2Int.one * -1) // If there is no selected grid object.
         {
             SelectGem(gridPos);
+            AudioManager.Instance.PlayClickSound();
         }
         else
         {
-            StartCoroutine(RunGameLoop(selectedGem, gridPos)); // TODO: Bu işlem bitene kadar mouse inputuna izin verme flag tanımla
+            StartCoroutine(HandleGameAction(selectedGem, gridPos)); // TODO: Bu işlem bitene kadar mouse inputuna izin verme flag tanımla
         }
     }
 
-    IEnumerator RunGameLoop(Vector2Int gridPosA, Vector2Int gridPosB)
+    IEnumerator HandleGameAction(Vector2Int gridPosA, Vector2Int gridPosB)
     {
         StartCoroutine(SwapGems(gridPosA, gridPosB));
 
         List<Vector2Int> matches = FindMatches();
         //TODO: eşleşme bulunmazsa can eksiltme.
+        //TODO: skor hesapla.
 
+        //TODO: Optimize için match yoksa alt kısımı çalıştırma (deselect hariç o çalışsın)
         yield return StartCoroutine(HandleExplodeGems(matches));
 
         yield return StartCoroutine(HandleFallGems());
 
         yield return StartCoroutine(HandleFillEmptySlots());
 
-        DeselectGem();
+        //seviyenin bitip bitmediğini kontrol et.
 
-        yield return null;
+        DeselectGem();
     }
 
     IEnumerator HandleExplodeGems(List<Vector2Int> matches)
     {
-        //sfx
+        //AudioManager.Instance.PlayPopSound();
+        
+
         foreach (var match in matches)
         {
-            var gem = grid.GetValue(match.x, match.y).GetValue(); // null check
-            grid.SetValue(match.x, match.y, null);
+            var gem = _grid.GetValue(match.x, match.y).GetValue(); // TODO: null check
+            _grid.SetValue(match.x, match.y, null);
 
-            //explode vfx
+            HandleExplodeFx(match);
+            AudioManager.Instance.PlayExplosionSound();
 
             gem.transform.DOPunchScale(Vector3.one * 0.1f, 0.1f, 1, 0.5f);
 
@@ -91,22 +100,22 @@ public class Match3 : MonoBehaviour
 
     IEnumerator HandleFallGems()
     {
-        for (var x = 0; x < width; x++)
+        for (var x = 0; x < _width; x++)
         {
-            for (var y = 0; y < height; y++)
+            for (var y = 0; y < _height; y++)
             {
-                if(grid.GetValue(x, y) == null)
+                if (_grid.GetValue(x, y) == null)
                 {
-                    for (var i = y + 1; i < height; i++)
+                    for (var i = y + 1; i < _height; i++)
                     {
-                        if(grid.GetValue(x, i) != null)
+                        if (_grid.GetValue(x, i) != null)
                         {
-                            var gem = grid.GetValue(x, i).GetValue();
-                            grid.SetValue(x, y, grid.GetValue(x, i));
-                            grid.SetValue(x, i, null);
+                            var gem = _grid.GetValue(x, i).GetValue();
+                            _grid.SetValue(x, y, _grid.GetValue(x, i));
+                            _grid.SetValue(x, i, null);
                             gem.transform
-                            .DOLocalMove(grid.GetWorldPositionCenter(x, y), 0.5f).SetEase(Ease.InQuad);
-                            //sfx woosh sound
+                            .DOLocalMove(_grid.GetWorldPositionCenter(x, y), 0.5f).SetEase(Ease.InQuad);
+                            AudioManager.Instance.PlayWooshSound();
                             yield return new WaitForSeconds(0.1f);
                             break;
                         }
@@ -118,14 +127,14 @@ public class Match3 : MonoBehaviour
 
     IEnumerator HandleFillEmptySlots()
     {
-        for (var x = 0; x < width; x++)
+        for (var x = 0; x < _width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < _height; y++)
             {
-                if(grid.GetValue(x,y) == null)
+                if (_grid.GetValue(x, y) == null)
                 {
                     CreateGem(x, y);
-                    //sfx
+                    AudioManager.Instance.PlayPopSound();
                     yield return new WaitForSeconds(0.1f);
                 }
             }
@@ -137,13 +146,13 @@ public class Match3 : MonoBehaviour
         HashSet<Vector2Int> matches = new();
 
         //Horizontal Find
-        for (var y = 0; y < height; y++)
+        for (var y = 0; y < _height; y++)
         {
-            for (var x = 0; x < width - 2; x++)
+            for (var x = 0; x < _width - 2; x++)
             {
-                var gemA = grid.GetValue(x, y);
-                var gemB = grid.GetValue(x + 1, y);
-                var gemC = grid.GetValue(x + 2, y);
+                var gemA = _grid.GetValue(x, y);
+                var gemB = _grid.GetValue(x + 1, y);
+                var gemC = _grid.GetValue(x + 2, y);
 
                 if (gemA == null || gemB == null || gemC == null)
                 {
@@ -160,13 +169,13 @@ public class Match3 : MonoBehaviour
         }
 
         //Vertical Find
-        for (var x = 0; x < width; x++)
+        for (var x = 0; x < _width; x++)
         {
-            for (var y = 0; y < height - 2; y++)
+            for (var y = 0; y < _height - 2; y++)
             {
-                var gemA = grid.GetValue(x, y);
-                var gemB = grid.GetValue(x, y + 1);
-                var gemC = grid.GetValue(x, y + 2);
+                var gemA = _grid.GetValue(x, y);
+                var gemB = _grid.GetValue(x, y + 1);
+                var gemC = _grid.GetValue(x, y + 2);
 
                 if (gemA == null || gemB == null || gemC == null)
                 {
@@ -182,33 +191,42 @@ public class Match3 : MonoBehaviour
             }
         }
 
-        return new List<Vector2Int> (matches);
+        if (matches.Count == 0)
+        {
+            AudioManager.Instance.PlayNoMatchSound();
+        }
+        else
+        {
+            AudioManager.Instance.PlayMatchSound();
+        }
+
+        return new List<Vector2Int>(matches);
     }
 
     IEnumerator SwapGems(Vector2Int gridPosA, Vector2Int gridPosB)
     {
-        var gridObjectA = grid.GetValue(gridPosA.x, gridPosA.y);
-        var gridObjectB = grid.GetValue(gridPosB.x, gridPosB.y);
-        Debug.Log("gird object: " + grid);
+        var gridObjectA = _grid.GetValue(gridPosA.x, gridPosA.y);
+        var gridObjectB = _grid.GetValue(gridPosB.x, gridPosB.y);
+        Debug.Log("gird object: " + _grid);
         gridObjectA.GetValue().transform
-        .DOLocalMove(grid.GetWorldPositionCenter(gridPosB.x, gridPosB.y), 0.5f).SetEase(Ease.InQuad);
+        .DOLocalMove(_grid.GetWorldPositionCenter(gridPosB.x, gridPosB.y), 0.5f).SetEase(Ease.InQuad);
 
         gridObjectB.GetValue().transform
-        .DOLocalMove(grid.GetWorldPositionCenter(gridPosA.x, gridPosA.y), 0.5f).SetEase(Ease.InQuad);
+        .DOLocalMove(_grid.GetWorldPositionCenter(gridPosA.x, gridPosA.y), 0.5f).SetEase(Ease.InQuad);
 
-        grid.SetValue(gridPosA.x, gridPosA.y, gridObjectB);
-        grid.SetValue(gridPosB.x, gridPosB.y, gridObjectA);
+        _grid.SetValue(gridPosA.x, gridPosA.y, gridObjectB);
+        _grid.SetValue(gridPosB.x, gridPosB.y, gridObjectA);
 
         yield return new WaitForSeconds(0.5f);
     }
 
     private void InitializeGrid()
     {
-        grid = GridSystem2D<GridObject<Gem>>.VerticalGrid(width, height, cellSize, originPosition, debug);
+        _grid = GridSystem2D<GridObject<Gem>>.VerticalGrid(_width, _height, _cellSize, _originPosition, _debug);
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < _width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < _height; y++)
             {
                 CreateGem(x, y);
             }
@@ -217,12 +235,12 @@ public class Match3 : MonoBehaviour
 
     private void CreateGem(int x, int y)
     {
-        Gem gem = Instantiate(gemPrefab, grid.GetWorldPositionCenter(x, y), Quaternion.identity, transform);
-        Debug.Log("gem position: " + grid.GetWorldPositionCenter(x, y));
-        gem.SetGemType(gemTypes[Random.Range(0, gemTypes.Length)]);
-        var gridObject = new GridObject<Gem>(grid, x, y);
+        Gem gem = Instantiate(_gemPrefab, _grid.GetWorldPositionCenter(x, y), Quaternion.identity, transform); //TODO: FARKLI PARENT
+        //Debug.Log("gem position: " + grid.GetWorldPositionCenter(x, y));
+        gem.SetGemType(_gemTypes[Random.Range(0, _gemTypes.Length)]); //TODO: Generate algoritması geliştirilmeli
+        var gridObject = new GridObject<Gem>(_grid, x, y);
         gridObject.SetValue(gem); // Initiliaize gem to grid object
-        grid.SetValue(x, y, gridObject); // Init grid object to grid matrice
+        _grid.SetValue(x, y, gridObject); // Init grid object to grid matrice
 
     }
 
@@ -232,8 +250,15 @@ public class Match3 : MonoBehaviour
 
     bool IsValidPosition(Vector2 gridPosition)
     {
-        return gridPosition.x >= 0 && gridPosition.x < width && gridPosition.y >= 0 && gridPosition.y < height;
+        return gridPosition.x >= 0 && gridPosition.x < _width && gridPosition.y >= 0 && gridPosition.y < _height;
     }
 
-    bool IsEmptyPosition(Vector2Int gridPosition) => grid.GetValue(gridPosition.x, gridPosition.y) == null;
+    bool IsEmptyPosition(Vector2Int gridPosition) => _grid.GetValue(gridPosition.x, gridPosition.y) == null;
+
+    void HandleExplodeFx(Vector2Int match)
+    {
+        var explodeFx = Instantiate(_explosion, transform);
+        explodeFx.transform.position = _grid.GetWorldPositionCenter(match.x, match.y);
+        Destroy(explodeFx, 3f);
+    }
 }
