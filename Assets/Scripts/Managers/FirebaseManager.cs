@@ -10,7 +10,7 @@ namespace Managers
         private static void Main()
         {
             // Create an empty GameObject
-            GameObject gameObject = new GameObject("ServicesToolKit");
+            GameObject gameObject = new GameObject("Firebase");
             // Add this Component
             gameObject.AddComponent<FirebaseManager>();
         }

@@ -1,11 +1,14 @@
-﻿namespace Services.Firebase
+﻿using Firebase.Database;
+
+namespace Services.Firebase
 {
     public static class Database
     {
+        private static DatabaseReference dbReference;
 
         public static void Initialize()
         {
-            throw new System.NotImplementedException();
+            dbReference = FirebaseDatabase.DefaultInstance.RootReference;
         }
     }
 }
