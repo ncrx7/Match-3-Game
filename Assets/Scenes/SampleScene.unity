@@ -169,8 +169,8 @@ MonoBehaviour:
   _explosion: {fileID: 2102999931433593722, guid: db8bcc622f069a6449f43fba3180f52e,
     type: 3}
   inputReader: {fileID: 64854351}
-  _swapGemSpeed: 0.5
-  _explodeGemSpeed: 0.1
+  _swapGemDelay: 0.5
+  _explodeGemDelay: 0.1
   _fallGemDelay: 0.05
   _fillEmptySlotDelay: 0.06
 --- !u!4 &64854349

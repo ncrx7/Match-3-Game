@@ -21,10 +21,11 @@ public class GameManager : MonoBehaviour
     GridSystem2D<GridObject<Gem>> _grid;
 
     [SerializeField] InputReader inputReader;
+    private bool _isProcessing;
 
-    [Header("Game mechanic delay speed")]
-    [SerializeField] private float _swapGemSpeed;
-    [SerializeField] private float _explodeGemSpeed;
+    [Header("Game mechanic delay")]
+    [SerializeField] private float _swapGemDelay;
+    [SerializeField] private float _explodeGemDelay;
     [SerializeField] private float _fallGemDelay;
     [SerializeField] private float _fillEmptySlotDelay;
 
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeGrid();
+        InitializeGridAndGems();
         inputReader.Fire += OnSelectGem; // when mouse 1 clicked
     }
 
@@ -40,33 +41,37 @@ public class GameManager : MonoBehaviour
     {
         inputReader.Fire -= OnSelectGem;
     }
-
+  
     // when mouse 1 clicked
     void OnSelectGem()
     {
-        var gridPos = _grid.GetXY(Camera.main.ScreenToWorldPoint(inputReader.Selected)); //TODO: make inputreader class singleton
+        if (!_isProcessing)
+        {
+            var gridPos = _grid.GetXY(Camera.main.ScreenToWorldPoint(inputReader.Selected)); //TODO: make inputreader class singleton
 
-        //Debug.Log("gridpos: " + gridPos);
-        if (!IsValidPosition(gridPos) || IsEmptyPosition(gridPos)) return;
+            //Debug.Log("gridpos: " + gridPos);
+            if (!IsValidPosition(gridPos) || IsEmptyPosition(gridPos)) return;
 
-        if (selectedGem == gridPos) //when clicked to same grid object two times.
-        {
-            DeselectGem();
-            AudioManager.Instance.PlayDeselectSound();
-        }
-        else if (selectedGem == Vector2Int.one * -1) // If there is no selected grid object.
-        {
-            SelectGem(gridPos);
-            AudioManager.Instance.PlayClickSound();
-        }
-        else
-        {
-            StartCoroutine(HandleGameActions(selectedGem, gridPos)); // TODO: Bu işlem bitene kadar mouse inputuna izin verme flag tanımla
+            if (selectedGem == gridPos) //when clicked to same grid object two times.
+            {
+                DeselectGem();
+                AudioManager.Instance.PlayDeselectSound();
+            }
+            else if (selectedGem == Vector2Int.one * -1) // If there is no selected grid object.
+            {
+                SelectGem(gridPos);
+                AudioManager.Instance.PlayClickSound();
+            }
+            else
+            {
+                StartCoroutine(HandleGameActions(selectedGem, gridPos)); // TODO: Bu işlem bitene kadar mouse inputuna izin verme flag tanımla
+            }
         }
     }
 
     IEnumerator HandleGameActions(Vector2Int gridPosA, Vector2Int gridPosB)
     {
+        _isProcessing = true;
         List<Vector2Int> matches = new List<Vector2Int>();
         //TODO: eşleşme bulunmazsa can eksilt.
         //TODO: skor hesapla.
@@ -74,15 +79,18 @@ public class GameManager : MonoBehaviour
         //TODO: Optimize için match yoksa alt kısımı çalıştırma (deselect hariç o çalışsın)
 
         #region sequential callback
-        Action fillEmptySlotsCallback = null;
-        Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, _gemTypes, _gemPrefab , _fillEmptySlotDelay, fillEmptySlotsCallback);
+        Action fillEmptySlotsCallback = () => _isProcessing = false;
+        Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, _gemTypes, _gemPrefab, _fillEmptySlotDelay, fillEmptySlotsCallback);
         Action explodeGemsCallback = () => Match3Events.FallGems?.Invoke(_width, _height, _grid, _fallGemDelay, fallGemsCallback);
-        Action<List<Vector2Int>> returnMatchesCallback = (List<Vector2Int> matchesUpdated) => Match3Events.ExplodeGems?.Invoke(matchesUpdated, _grid, _explodeGemSpeed, explodeGemsCallback); //burda kaldın explode içinde matches güncellenmiyor
+        Action<List<Vector2Int>> returnMatchesCallback = (List<Vector2Int> matchesUpdated) => Match3Events.ExplodeGems?.Invoke(matchesUpdated, _grid, _explodeGemDelay, explodeGemsCallback); //burda kaldın explode içinde matches güncellenmiyor
         Action findMatchesCallback = () => matches = Match3Events.ReturnMatches?.Invoke();
-        Action swapGemsCallback = () => Match3Events.FindMatches?.Invoke(_width, _height, _grid, matches, findMatchesCallback, returnMatchesCallback);
+        Action swapGemsCallback = delegate() {
+            //_isProcessing = true;
+             Match3Events.FindMatches?.Invoke(_width, _height, _grid, matches, findMatchesCallback, returnMatchesCallback);
+        };
         #endregion
 
-        Match3Events.SwapGems?.Invoke(gridPosA, gridPosB, _grid, _swapGemSpeed, swapGemsCallback);
+        Match3Events.SwapGems?.Invoke(gridPosA, gridPosB, _grid, _swapGemDelay, swapGemsCallback);
         //Match3Events.ExplodeGems?.Invoke(matches, _grid, explodeGemsCallback);
 
         //seviyenin bitip bitmediğini kontrol et.
@@ -91,7 +99,7 @@ public class GameManager : MonoBehaviour
         yield return null;
     }
 
-    private void InitializeGrid()
+    private void InitializeGridAndGems()
     {
         _grid = GridSystem2D<GridObject<Gem>>.VerticalGrid(_width, _height, _cellSize, _originPosition, _debug);
 
