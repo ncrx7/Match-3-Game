@@ -79,11 +79,19 @@ public class GameManager : MonoBehaviour
         //TODO: Optimize için match yoksa alt kısımı çalıştırma (deselect hariç o çalışsın)
 
         #region sequential callback
-        Action fillEmptySlotsCallback = () => _isProcessing = false;
+        Action fillEmptySlotsCallback = delegate() 
+        {
+             _isProcessing = false;
+        };
+        
         Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, _gemTypes, _gemPrefab, _fillEmptySlotDelay, fillEmptySlotsCallback);
+        
         Action explodeGemsCallback = () => Match3Events.FallGems?.Invoke(_width, _height, _grid, _fallGemDelay, fallGemsCallback);
+        
         Action<List<Vector2Int>> returnMatchesCallback = (List<Vector2Int> matchesUpdated) => Match3Events.ExplodeGems?.Invoke(matchesUpdated, _grid, _explodeGemDelay, explodeGemsCallback); //burda kaldın explode içinde matches güncellenmiyor
+        
         Action findMatchesCallback = () => matches = Match3Events.ReturnMatches?.Invoke();
+
         Action swapGemsCallback = delegate() {
             //_isProcessing = true;
              Match3Events.FindMatches?.Invoke(_width, _height, _grid, matches, findMatchesCallback, returnMatchesCallback);
