@@ -8,6 +8,7 @@ using DG.Tweening;
 [RequireComponent(typeof(PlayerInput))]
 public class InputReader : MonoBehaviour
 {
+    public static InputReader Instance { get; private set; }
     PlayerInput _playerInput;
     InputAction _selectAction;
     InputAction _fireAction;
@@ -15,6 +16,16 @@ public class InputReader : MonoBehaviour
     public event Action Fire;
 
     public Vector2 Selected => _selectAction.ReadValue<Vector2>(); // read mouse screen position
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+    }
 
     private void Start()
     {

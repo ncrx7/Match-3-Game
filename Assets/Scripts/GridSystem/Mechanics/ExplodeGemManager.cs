@@ -6,28 +6,17 @@ using System;
 
 public class ExplodeGemManager : MonoBehaviour
 {
-    public static ExplodeGemManager Instance { get; private set; }
     [SerializeField] GameObject _explosion;
-
-         private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-                return;
-            }
-            Instance = this;
-        } 
 
     private void OnEnable()
     {
-        Match3Events.ExplodeGems += (List<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid,float explodeGemSpeed , Action callback) 
+        Match3Events.ExplodeGems += (List<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid, float explodeGemSpeed, Action callback)
         => StartCoroutine(HandleExplodeGems(matches, grid, explodeGemSpeed, callback));
     }
 
     private void OnDisable()
     {
-        Match3Events.ExplodeGems -= (List<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid,float explodeGemSpeed , Action callback) 
+        Match3Events.ExplodeGems -= (List<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid, float explodeGemSpeed, Action callback)
         => StartCoroutine(HandleExplodeGems(matches, grid, explodeGemSpeed, callback));
     }
 
