@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Purple
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 53ebf21b7c1b7c045a372e7cbc677cdc, type: 3}
+  Weight: 1

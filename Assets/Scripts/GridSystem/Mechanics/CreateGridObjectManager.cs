@@ -17,12 +17,46 @@ public class CreateGridObjectManager : MonoBehaviour
     private void CreateGem(int x, int y, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, Gem gemPrefab)
     {
         Gem gem = Instantiate(gemPrefab, grid.GetWorldPositionCenter(x, y), Quaternion.identity, transform); //TODO: FARKLI PARENT
-        //Debug.Log("gem position: " + grid.GetWorldPositionCenter(x, y));
-        gem.SetGemType(gemTypes[UnityEngine.Random.Range(0, gemTypes.Length)]); //TODO: Generate algoritması geliştirilmeli
+                                                                                                             //Debug.Log("gem position: " + grid.GetWorldPositionCenter(x, y));
+        gem.SetGemType(GenerateGemType(gemTypes)); // Rastgele gem tipini seç
         var gridObject = new GridObject<Gem>(grid, x, y);
-        gridObject.SetValue(gem); // Initiliaize gem to grid object
-        grid.SetValue(x, y, gridObject); // Init grid object to grid matrice
+        gridObject.SetValue(gem); // Gem'i grid nesnesine initialize et
+        grid.SetValue(x, y, gridObject); // Grid matrisine grid nesnesini initialize et
+    }
 
+    private GemType GenerateGemType(GemType[] gemTypes)
+    {
+        float[] weights = new float[gemTypes.Length];
+        for (int i = 0; i < gemTypes.Length; i++)
+        {
+            weights[i] = gemTypes[i].Weight; 
+        }
+
+        int selectedIndex = WeightedRandom(weights);
+
+        return gemTypes[selectedIndex];
+    }
+
+    private int WeightedRandom(float[] weights)
+    {
+        float totalWeight = 0f;
+        foreach (float weight in weights)
+        {
+            totalWeight += weight;
+        }
+
+        float randomValue = Random.Range(0f, totalWeight);
+
+        for (int i = 0; i < weights.Length; i++)
+        {
+            if (randomValue < weights[i])
+            {
+                return i;
+            }
+            randomValue -= weights[i];
+        }
+
+        return (int)Random.Range(0f, weights.Length);
     }
 
     //TODO: We can create other create method for creating any other gridobject
