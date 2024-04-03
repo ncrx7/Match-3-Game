@@ -1,4 +1,5 @@
 ﻿using Core;
+using Services.Firebase;
 using UnityEngine;
 using Utils.Extensions;
 
@@ -23,6 +24,14 @@ namespace Managers
             
             //TO DO : Bu fonksyon asenkron olacak bitince load scene geçecek
             await FirebaseMemory.Initialize();
+            var auth = Resources.Load("AuthenticationUI") as GameObject;
+            if (LocalDatabase.testUser)
+            {
+                if (await Authentication.LoginWithTestUser() == "Success")
+                    return;
+                Debug.LogError("Login With Test User Operation is Failed!!!");
+            }
+            Instantiate(auth, transform);
         }
         
         private void OnApplicationQuit()

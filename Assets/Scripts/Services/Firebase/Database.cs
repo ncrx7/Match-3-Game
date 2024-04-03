@@ -10,5 +10,10 @@ namespace Services.Firebase
         {
             dbReference = FirebaseDatabase.DefaultInstance.RootReference;
         }
+        
+        public static void Reset()
+        {
+            dbReference = null;
+        }
     }
 }

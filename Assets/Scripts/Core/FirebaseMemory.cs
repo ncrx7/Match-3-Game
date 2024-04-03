@@ -47,6 +47,10 @@ namespace Core
             firebaseInitialized = false;
             FirebaseManager = null;
             App = null;
+            
+            Database.Reset();
+            Authentication.Reset();
+            Analytics.Reset();
         }
     }
 }

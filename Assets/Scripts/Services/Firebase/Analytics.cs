@@ -9,5 +9,10 @@ namespace Services.Firebase
         {
             FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
         }
+        
+        public static void Reset()
+        {
+            FirebaseAnalytics.SetAnalyticsCollectionEnabled(false);
+        }
     }
 }
