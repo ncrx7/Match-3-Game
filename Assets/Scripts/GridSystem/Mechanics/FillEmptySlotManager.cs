@@ -7,17 +7,17 @@ public class FillEmptySlotManager : MonoBehaviour
 {
     private void OnEnable()
     {
-        Match3Events.FillEmptySlots += (int width, int height, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, Gem gemPrefab, float fillEmptySlotDelay, Action callback)
-        => StartCoroutine(HandleFillEmptySlots(width, height, grid, gemTypes, gemPrefab, fillEmptySlotDelay, callback));
+        Match3Events.FillEmptySlots += (int width, int height, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, int gemPoolId, float fillEmptySlotDelay, Action callback)
+        => StartCoroutine(HandleFillEmptySlots(width, height, grid, gemTypes, gemPoolId, fillEmptySlotDelay, callback));
     }
 
     private void OnDisable()
     {
-        Match3Events.FillEmptySlots -= (int width, int height, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, Gem gemPrefab, float fillEmptySlotDelay, Action callback)
-        => StartCoroutine(HandleFillEmptySlots(width, height, grid, gemTypes, gemPrefab, fillEmptySlotDelay, callback));
+        Match3Events.FillEmptySlots -= (int width, int height, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, int gemPoolId, float fillEmptySlotDelay, Action callback)
+        => StartCoroutine(HandleFillEmptySlots(width, height, grid, gemTypes, gemPoolId, fillEmptySlotDelay, callback));
     }
 
-    IEnumerator HandleFillEmptySlots(int width, int height, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, Gem gemPrefab, float fillEmptySlotDelay, Action callback)
+    IEnumerator HandleFillEmptySlots(int width, int height, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, int gemPoolId, float fillEmptySlotDelay, Action callback)
     {
         for (var x = 0; x < width; x++)
         {
@@ -25,7 +25,7 @@ public class FillEmptySlotManager : MonoBehaviour
             {
                 if (grid.GetValue(x, y) == null)
                 {
-                    Match3Events.CreateGemObject?.Invoke(x, y, grid, gemTypes, gemPrefab);
+                    Match3Events.CreateGemObject?.Invoke(x, y, grid, gemTypes, gemPoolId);
                     //CreateGem(x, y);
                     AudioManager.Instance.PlayPopSound();
                     yield return new WaitForSeconds(fillEmptySlotDelay);

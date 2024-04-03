@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 
 public class CreateGridObjectManager : MonoBehaviour
@@ -14,9 +15,13 @@ public class CreateGridObjectManager : MonoBehaviour
         Match3Events.CreateGemObject -= CreateGem;
     }
 
-    private void CreateGem(int x, int y, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, Gem gemPrefab)
+    private void CreateGem(int x, int y, GridSystem2D<GridObject<Gem>> grid, GemType[] gemTypes, int gemPoolId)
     {
-        Gem gem = Instantiate(gemPrefab, grid.GetWorldPositionCenter(x, y), Quaternion.identity, transform); //TODO: FARKLI PARENT
+        Gem gem = ObjectPooler.GetObject(gemPoolId) as Gem;
+        gem.transform.position = grid.GetWorldPositionCenter(x, y);
+        gem.transform.SetParent(transform);
+        
+        //Gem gem = Instantiate(gemPrefab, grid.GetWorldPositionCenter(x, y), Quaternion.identity, transform); //TODO: FARKLI PARENT
                                                                                                              //Debug.Log("gem position: " + grid.GetWorldPositionCenter(x, y));
         gem.SetGemType(GenerateGemType(gemTypes)); // Rastgele gem tipini seç
         var gridObject = new GridObject<Gem>(grid, x, y);

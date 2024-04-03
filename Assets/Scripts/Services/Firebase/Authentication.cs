@@ -97,9 +97,6 @@ namespace Services.Firebase
                 {
                     //Call the Firebase auth update user profile function passing the profile with the username
                     await User.UpdateUserProfileAsync(profile);
-                    //Username is now set
-                    //Now return to login screen
-                    UIManager.instance.LoginScreen();
                     return "Success";
                 }
                 catch (Exception ex)

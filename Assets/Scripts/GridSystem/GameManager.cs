@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using DG.Tweening;
 using UnityEngine;
 using Utils.Extensions;
@@ -34,9 +35,11 @@ public class GameManager : MonoBehaviour
     GridSystem2D<GridObject<Gem>> _grid;
     private bool _isProcessing;
     Vector2Int selectedGem = Vector2Int.one * -1;
-
+    private int _gemPoolId;
+    
     private void Start()
     {
+        _gemPoolId = ObjectPooler.CreatePool(_gemPrefab, 100);
         InitializeGridAndGems();
         InputReader.Instance.Fire += OnSelectGem; // when mouse 1 clicked
         Match3Events.RepeatGameActions += HandleGameActions;
@@ -99,7 +102,7 @@ public class GameManager : MonoBehaviour
             Match3Events.RepeatGameActions.Invoke(new Vector2Int(0, 0), new Vector2Int(0, 0)); //if there are matches after all process, repeat the procoess until no match is found
         };
 
-        Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, _gemTypes, _gemPrefab, _fillEmptySlotDelay, fillEmptySlotsCallback);
+        Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, _gemTypes, _gemPoolId, _fillEmptySlotDelay, fillEmptySlotsCallback);
 
         Action explodeGemsCallback = delegate ()
         {
@@ -138,7 +141,7 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < _height; y++)
             {
-                Match3Events.CreateGemObject?.Invoke(x, y, _grid, _gemTypes, _gemPrefab);
+                Match3Events.CreateGemObject?.Invoke(x, y, _grid, _gemTypes, _gemPoolId);
                 //CreateGem(x, y);
             }
         }

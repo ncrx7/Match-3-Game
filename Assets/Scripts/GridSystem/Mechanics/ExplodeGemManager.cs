@@ -38,7 +38,9 @@ public class ExplodeGemManager : MonoBehaviour
             gem.transform.DOPunchScale(Vector3.one * 0.1f, 0.1f, 1, 0.5f);
 
             yield return new WaitForSeconds(explodeGemSpeed);
-            gem.DestroyGem();
+            
+            gem.gameObject.SetActive(false);
+            //gem.DestroyGem();
             //Destroy(gem.gameObject);
         }
 
