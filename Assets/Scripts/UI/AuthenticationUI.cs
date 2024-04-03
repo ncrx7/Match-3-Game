@@ -6,6 +6,7 @@ using TMPro;
 using System.Threading.Tasks;
 using Services.Firebase;
 using UnityUtils.BaseClasses;
+using Utils.Extensions;
 
 public class AuthenticationUI : SingletonBehavior<AuthenticationUI>
 {
@@ -28,6 +29,10 @@ public class AuthenticationUI : SingletonBehavior<AuthenticationUI>
     public TMP_InputField passwordRegisterField;
     public TMP_InputField passwordRegisterVerifyField;
     public TMP_Text warningRegisterText;
+
+    private Transform Root => transform.GetChild(0);
+
+    public void Activate(bool active) => Root.SetActivate(active);
     
     //Function for the login button
     public async void LoginButton()
@@ -38,6 +43,7 @@ public class AuthenticationUI : SingletonBehavior<AuthenticationUI>
         {
             warningLoginText.text = "";
             confirmLoginText.text = "Logged In";
+            Root.SetActivate(false);
             return;
         }
         warningLoginText.text = result;
@@ -63,6 +69,7 @@ public class AuthenticationUI : SingletonBehavior<AuthenticationUI>
             
             loginUI.SetActive(true);
             registerUI.SetActive(false);
+            Root.SetActivate(false);
             return;
         }
         warningRegisterText.text = result;
