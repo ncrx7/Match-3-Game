@@ -8,17 +8,17 @@ public class UIManager : MonoBehaviour
     public GameObject MainMenu;
     public GameObject StageMenu;
     public GameObject SettingsMenu;
-    public static UIManager instance { get; private set; }
+    public static UIManager Instance { get; private set; }
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this);
         }
         else
         {
-            instance = this;
+            Instance = this;
         }
         
         DontDestroyOnLoad(this);

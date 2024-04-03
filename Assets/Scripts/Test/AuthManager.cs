@@ -187,7 +187,7 @@ public class AuthManager : MonoBehaviour
                     {
                         //Username is now set
                         //Now return to login screen
-                        UIManager.instance.LoginScreen();
+                        UIManagerTest.Instance.LoginScreen();
                         warningRegisterText.text = "";
                     }
                 }
