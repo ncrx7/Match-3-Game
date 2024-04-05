@@ -9,6 +9,10 @@ using Utils.Extensions;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+    [SerializeField] public int SwapAmount {get; set;}
+    public int Level {get; private set;} = 2;
+
     [Header("Grid Settings")]
     [SerializeField] int _width = 8;
     [SerializeField] int _height = 8;
@@ -18,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Gem Settings")]
     [SerializeField] Gem _gemPrefab;
-    [SerializeField] GemType[] _gemTypes;
+    [SerializeField] public GemType[] GemTypes;
 
     [Header("FX")]
     [SerializeField] GameObject _explosion;
@@ -29,20 +33,29 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _fallGemDelay;
     [SerializeField] private float _fillEmptySlotDelay;
 
-    [Header("Swap Amount")]
-    [SerializeField] private int swapAmount;
 
     GridSystem2D<GridObject<Gem>> _grid;
     private bool _isProcessing;
     Vector2Int selectedGem = Vector2Int.one * -1;
     private int _gemPoolId;
-    
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+    }
+
     private void Start()
     {
         _gemPoolId = ObjectPooler.CreatePool(_gemPrefab, 100);
         InitializeGridAndGems();
         InputReader.Instance.Fire += OnSelectGem; // when mouse 1 clicked
         Match3Events.RepeatGameActions += HandleGameActions;
+        //TODO: SET LEVEL FROM DATABASE
     }
 
     private void OnDestroy()
@@ -50,11 +63,11 @@ public class GameManager : MonoBehaviour
         InputReader.Instance.Fire -= OnSelectGem;
         Match3Events.RepeatGameActions -= HandleGameActions;
     }
-
+    
     // when mouse 1 clicked
     void OnSelectGem()
     {
-        if (!_isProcessing && swapAmount > 0)
+        if (!_isProcessing && SwapAmount > 0)
         {
             var gridPos = _grid.GetXY(Camera.main.ScreenToWorldPoint(InputReader.Instance.Selected)); //TODO: make inputreader class singleton
 
@@ -78,7 +91,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                swapAmount--;
+                SwapAmount--;
                 HandleGameActions(selectedGem, gridPos); // TODO: Bu işlem bitene kadar mouse inputuna izin verme flag tanımla
             }
         }
@@ -102,7 +115,7 @@ public class GameManager : MonoBehaviour
             Match3Events.RepeatGameActions.Invoke(new Vector2Int(0, 0), new Vector2Int(0, 0)); //if there are matches after all process, repeat the procoess until no match is found
         };
 
-        Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, _gemTypes, _gemPoolId, _fillEmptySlotDelay, fillEmptySlotsCallback);
+        Action fallGemsCallback = () => Match3Events.FillEmptySlots?.Invoke(_width, _height, _grid, GemTypes, _gemPoolId, _fillEmptySlotDelay, fillEmptySlotsCallback);
 
         Action explodeGemsCallback = delegate ()
         {
@@ -141,7 +154,7 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < _height; y++)
             {
-                Match3Events.CreateGemObject?.Invoke(x, y, _grid, _gemTypes, _gemPoolId);
+                Match3Events.CreateGemObject?.Invoke(x, y, _grid, GemTypes, _gemPoolId);
                 //CreateGem(x, y);
             }
         }
@@ -165,7 +178,7 @@ public class GameManager : MonoBehaviour
 
     void DeselectGem()
     {
-        if(selectedGem != null) _grid.GetValue(selectedGem.x, selectedGem.y).GetValue().transform.DOPunchScale(Vector3.one * 0.4f, 0.3f, 1, 0.5f);
+        if (selectedGem != null) _grid.GetValue(selectedGem.x, selectedGem.y).GetValue().transform.DOPunchScale(Vector3.one * 0.4f, 0.3f, 1, 0.5f);
         selectedGem = new Vector2Int(-1, -1);
     }
 
