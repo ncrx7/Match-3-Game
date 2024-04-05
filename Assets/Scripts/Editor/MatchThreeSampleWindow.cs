@@ -17,7 +17,7 @@ namespace Editor
         [InitializeOnLoadMethod]
         private static async void OnLoad()
         {
-            if (!LocalDatabase.welcomePanelIsActive)
+            if (!LocalDatabase.WelcomePanelIsActive)
                 return;
 
             await Task.Delay(10);
@@ -59,12 +59,12 @@ as an example using Firebase services.");
                 
             GUILayout.Space(50);
             
-            Button(LocalDatabase.testUser, LocalDatabase.testUser ? "Login Without Test User" : "Login With Test User",
-                "Test User", () => {LocalDatabase.testUser = !LocalDatabase.testUser;});
+            Button(LocalDatabase.TestUser, LocalDatabase.TestUser ? "Login Without Test User" : "Login With Test User",
+                "Test User", () => {LocalDatabase.TestUser = !LocalDatabase.TestUser;});
             
-            Button(LocalDatabase.welcomePanelIsActive, LocalDatabase.welcomePanelIsActive ? "Welcome window does not open with InitializeOnLoad"
+            Button(LocalDatabase.WelcomePanelIsActive, LocalDatabase.WelcomePanelIsActive ? "Welcome window does not open with InitializeOnLoad"
                     : "Welcome window does open with InitializeOnLoad",
-                "Welcome window opens automatically", () => {LocalDatabase.welcomePanelIsActive = !LocalDatabase.welcomePanelIsActive;});
+                "Welcome window opens automatically", () => {LocalDatabase.WelcomePanelIsActive = !LocalDatabase.WelcomePanelIsActive;});
             
             GUILayout.FlexibleSpace();
             Header("Developed By");

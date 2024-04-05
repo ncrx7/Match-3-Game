@@ -1213,7 +1213,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 7
+  m_AdditionalShaderChannelsFlag: 31
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -1303,17 +1303,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb5d2d4725e56d4ca1a65439c037c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loginUI: {fileID: 5560094909795981218}
-  registerUI: {fileID: 3270151225126903007}
-  emailLoginField: {fileID: 2911590238138774000}
-  passwordLoginField: {fileID: 7719045123481579678}
-  warningLoginText: {fileID: 2951382027096040153}
-  confirmLoginText: {fileID: 1847229190747707105}
-  usernameRegisterField: {fileID: 1260973579861047838}
-  emailRegisterField: {fileID: 1671013899718391203}
-  passwordRegisterField: {fileID: 6230735083246662448}
-  passwordRegisterVerifyField: {fileID: 4155132805957884967}
-  warningRegisterText: {fileID: 2991037073571119525}
+  _loginUI: {fileID: 5560094909795981218}
+  _registerUI: {fileID: 3270151225126903007}
+  _emailLoginField: {fileID: 2911590238138774000}
+  _passwordLoginField: {fileID: 7719045123481579678}
+  _warningLoginText: {fileID: 2951382027096040153}
+  _confirmLoginText: {fileID: 1847229190747707105}
+  _usernameRegisterField: {fileID: 1260973579861047838}
+  _emailRegisterField: {fileID: 1671013899718391203}
+  _passwordRegisterField: {fileID: 6230735083246662448}
+  _passwordRegisterVerifyField: {fileID: 4155132805957884967}
+  _warningRegisterText: {fileID: 2991037073571119525}
 --- !u!1 &1956668932737337778
 GameObject:
   m_ObjectHideFlags: 0

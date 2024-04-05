@@ -1,11 +1,15 @@
 ﻿using Core;
+using Firebase.Auth;
 using Services.Firebase;
+using Services.Firebase.Database;
+using UI;
 using UnityEngine;
+using UnityUtils.BaseClasses;
 using Utils.Extensions;
 
 namespace Managers
 {
-    public class FirebaseManager : MonoBehaviour
+    public class FirebaseManager : SingletonBehavior<FirebaseManager>
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Main()
@@ -22,21 +26,37 @@ namespace Managers
                 return;
             FirebaseMemory.FirebaseManager = this;
             
-            //TO DO : Bu fonksyon asenkron olacak bitince load scene geçecek
             await FirebaseMemory.Initialize();
-            var auth = Resources.Load("AuthenticationUI") as GameObject;
-            if (LocalDatabase.testUser)
-            {
-                if (await Authentication.LoginWithTestUser() == "Success")
-                    return;
-                Debug.LogError("Login With Test User Operation is Failed!!!");
-            }
-            Instantiate(auth, transform);
+            ShowAuthentication();
         }
         
         private void OnApplicationQuit()
         {
             FirebaseMemory.Reset();
+        }
+
+        public static async void ShowAuthentication()
+        {
+            if (LocalDatabase.TestUser)
+            {
+                FirebaseResult<FirebaseUser> loginResult = await Authentication.LoginWithTestUser();
+                if (loginResult.Success)
+                    return;
+                
+                Debug.LogError("Login With Test User Operation is Failed!!!");
+                LocalDatabase.TestUser = false;
+                ShowAuthentication();
+            }
+            else
+            {
+                if (!AuthenticationUI.Instance)
+                {
+                    var auth = Resources.Load("AuthenticationUI") as GameObject;
+                    Instantiate(auth, Instance.transform);
+                }
+                
+                AuthenticationUI.Instance.Activate(true);
+            }
         }
     }
 }
