@@ -74,5 +74,30 @@ namespace UI
             _warningRegisterText.text = result.Cause;
             _confirmLoginText.text = "";
         }
+        
+        //Function for the logout button
+        public static void LogOutButton()
+        {
+            if (!Instance)
+            {
+                var auth = Resources.Load("AuthenticationUI") as GameObject;
+                Instantiate(auth, Instance.transform);
+            }
+            
+            FirebaseResult<bool> result = Authentication.LogOut();
+
+            if (result.Success)
+            {
+                Instance._warningRegisterText.text = "";
+                Instance._confirmLoginText.text = "Log out Successful";
+                
+                Instance.Activate(true);
+                Instance._loginUI.SetActive(true);
+                Instance._registerUI.SetActive(false);
+                return;
+            }
+            Instance._warningRegisterText.text = result.Cause;
+            Instance._confirmLoginText.text = "";
+        }
     }
 }

@@ -148,6 +148,31 @@ namespace Services.Firebase
                 return new FirebaseResult<FirebaseUser>() {Success = false, Cause = CatchError(exception)};
             }
         }
+        
+        /// <summary>
+        /// Logs out the currently logged-in user.
+        /// </summary>
+        /// <returns>A FirebaseResult containing the success status and an error message if unsuccessful.</returns>
+        public static FirebaseResult<bool> LogOut()
+        {
+            try
+            {
+                // Call the Firebase auth sign-out function
+                Auth.SignOut();
+                Debug.Log("User signed out successfully.");
+        
+                // Reset the currently logged-in user
+                User = null;
+                Database.Database.User = null;
+        
+                return new FirebaseResult<bool>() { Success = true, Item = true };
+            }
+            catch (Exception exception)
+            {
+                return new FirebaseResult<bool>() { Success = false, Cause = exception.Message };
+            }
+        }
+
 
         /// <summary>
         /// Handles the exception thrown during Firebase authentication and returns the corresponding error message.
