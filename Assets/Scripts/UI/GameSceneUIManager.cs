@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UIManagerInGame : MonoBehaviour
+public class GameSceneUIManager : MonoBehaviour
 {
     public GameObject InGameMenu;
     public GameObject PauseMenu;
