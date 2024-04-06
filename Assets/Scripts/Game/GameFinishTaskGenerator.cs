@@ -8,10 +8,21 @@ using UnityEngine.UI;
 
 public class GameFinishTaskGenerator : MonoBehaviour
 {
+    public static GameFinishTaskGenerator Instance { get; private set; }
     [SerializeField] private GameObject _targetGemPrefab;
     [SerializeField] private Transform _targetGemPrefabParent;
-    private Dictionary<GemType, int> _target = new();
-    
+    public Dictionary<GemType, int> Target = new();
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+    }
+
     private void Start()
     {
         SetSwapAmount();
@@ -26,10 +37,10 @@ public class GameFinishTaskGenerator : MonoBehaviour
             Image targetGemImage = targetGem.GetComponent<Image>();
             targetGemImage.sprite = sortedGemTypes[i].Sprite;
 
-            int targetAmount = (int)sortedGemTypes[i].Weight * Random.Range(1, 3);
+            int targetAmount = (int)sortedGemTypes[i].Weight * Random.Range(1, 10);
             TextMeshProUGUI targetAmountText = targetGem.GetComponentInChildren<TextMeshProUGUI>();
             targetAmountText.text = targetAmount.ToString();
-            _target.Add(sortedGemTypes[i], targetAmount);
+            Target.Add(sortedGemTypes[i], targetAmount);
         }
     }
 
@@ -42,14 +53,14 @@ public class GameFinishTaskGenerator : MonoBehaviour
             sortedWeight.Add(gemType);
         }
 
-        sortedWeight.Sort((x, y) => x.Weight.CompareTo(y.Weight));
+        sortedWeight.Sort((x, y) => y.Weight.CompareTo(x.Weight));
 
         return sortedWeight;
     }
 
     private void SetSwapAmount()
     {
-        GameManager.Instance.SwapAmount = GameManager.Instance.Level * 3;
+        GameManager.Instance.SwapAmount = 15 / GameManager.Instance.Level;
     }
-    
+
 }

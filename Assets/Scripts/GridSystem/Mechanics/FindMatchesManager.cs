@@ -40,6 +40,7 @@ public class FindMatchesManager : MonoBehaviour
 
                 if (gemA.GetValue().GetGemType() == gemB.GetValue().GetGemType() && gemB.GetValue().GetGemType() == gemC.GetValue().GetGemType())
                 {
+                    //CheckTargetGem(gemA.GetValue().GetGemType(), ref GameFinishTaskGenerator.Instance.Target);
                     matches.Add(new Vector2Int(x, y));
                     matches.Add(new Vector2Int(x + 1, y));
                     matches.Add(new Vector2Int(x + 2, y));
@@ -78,7 +79,8 @@ public class FindMatchesManager : MonoBehaviour
         {
             AudioManager.Instance.PlayMatchSound();
         }
-
+        
+        CheckTargetGem(ref GameFinishTaskGenerator.Instance.Target, matches, grid);
         //Debug.Log("matches hash count: " + matches.Count);
         _matches = new List<Vector2Int>(matches);
         //Debug.Log("matcheslist count: " + _matches.Count);
@@ -92,5 +94,31 @@ public class FindMatchesManager : MonoBehaviour
         _returnMatchesCallback?.Invoke(_matches);
         //Debug.Log("matcheslist count from return: " + _matches.Count);
         return _matches;
+    }
+
+    private void CheckTargetGem(ref Dictionary<GemType, int> targetTasks, HashSet<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid)
+    {
+        foreach (var item in matches)
+        {
+            GemType gemTypeFromHash = grid.GetValue(item.x, item.y).GetValue().GetGemType();
+            if(targetTasks.ContainsKey(gemTypeFromHash))
+            {
+                Debug.Log("gem task value for: " + gemTypeFromHash.name + "  :" + targetTasks[gemTypeFromHash]);
+                targetTasks[gemTypeFromHash]--; 
+                if(targetTasks[gemTypeFromHash] < 0) targetTasks[gemTypeFromHash] = 0;
+                Debug.Log("gem task value after for: " + gemTypeFromHash.name + "  :" + targetTasks[gemTypeFromHash]);
+            }
+        }
+
+
+/*         Debug.Log("gemtype: " + gemType.name);
+        if (targetTasks.ContainsKey(gemType))
+        {
+            Debug.Log("gem task value for: " + gemType.name + "  :" + targetTasks[gemType]);
+            targetTasks[gemType] -= 3;
+
+            if(targetTasks[gemType] < 0) targetTasks[gemType] = 0;
+            Debug.Log("gem task value after for: " + gemType.name + "  :" + targetTasks[gemType]);
+        } */
     }
 }
