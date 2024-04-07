@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Match3Events
@@ -13,4 +14,13 @@ public class Match3Events
     public static Action<int, int, GridSystem2D<GridObject<Gem>>, float, Action> FallGems;
     public static Action<int, int, GridSystem2D<GridObject<Gem>>, GemType[], int, float, Action> FillEmptySlots;//
     public static Action<Vector2Int, Vector2Int> RepeatGameActions;
+
+    //UI Event
+    public static Action<int, TextMeshProUGUI> UpdateTaskGemRemainAmountText; 
+    public static Action<int> UpdateScoreText;
+    public static Action<int> UpdateSwapAmountText;
+    public static Action<int> UpdateLevelText;
+
+    public static Action<int, int> OnGameFinishedSuccessfully;
+    public static Action OnGameFinishedUnsuccessfully;
 }

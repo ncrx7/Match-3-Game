@@ -40,6 +40,8 @@ public class ExplodeGemManager : MonoBehaviour
             yield return new WaitForSeconds(explodeGemSpeed);
             
             gem.gameObject.SetActive(false);
+            GameManager.Instance.Score++;
+            Match3Events.UpdateScoreText?.Invoke(GameManager.Instance.Score);
             //gem.DestroyGem();
             //Destroy(gem.gameObject);
         }

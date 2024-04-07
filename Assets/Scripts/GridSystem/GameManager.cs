@@ -11,7 +11,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     [SerializeField] public int SwapAmount {get; set;}
-    public int Level {get; private set;} = 2;
+    public int Level {get; private set;} = 5;
+    public int Score {get; set;}
+    public int HighScore {get; set;}
+    public bool LevelPassed {get; set;}
 
     [Header("Grid Settings")]
     [SerializeField] int _width = 8;
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour
         InputReader.Instance.Fire += OnSelectGem; // when mouse 1 clicked
         Match3Events.RepeatGameActions += HandleGameActions;
         //TODO: SET LEVEL FROM DATABASE
+        Match3Events.UpdateLevelText?.Invoke(Level);
     }
 
     private void OnDestroy()
@@ -92,6 +96,9 @@ public class GameManager : MonoBehaviour
             else
             {
                 SwapAmount--;
+                Match3Events.UpdateSwapAmountText?.Invoke(SwapAmount);
+                Debug.Log("swap amount: " + SwapAmount);
+
                 HandleGameActions(selectedGem, gridPos); // TODO: Bu işlem bitene kadar mouse inputuna izin verme flag tanımla
             }
         }
@@ -110,8 +117,16 @@ public class GameManager : MonoBehaviour
         Action fillEmptySlotsCallback = delegate ()
         {
             _isProcessing = false;
+
+            if (matches.Count == 0 && SwapAmount == 0 && !LevelPassed)
+            {
+                Match3Events.OnGameFinishedUnsuccessfully?.Invoke();
+                return;
+            } 
+
             if (matches.Count == 0) return;
             Debug.Log("mathces count above repeat: " + matches.Count);
+            
             Match3Events.RepeatGameActions.Invoke(new Vector2Int(0, 0), new Vector2Int(0, 0)); //if there are matches after all process, repeat the procoess until no match is found
         };
 

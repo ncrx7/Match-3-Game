@@ -11,7 +11,7 @@ public class GameFinishTaskGenerator : MonoBehaviour
     public static GameFinishTaskGenerator Instance { get; private set; }
     [SerializeField] private GameObject _targetGemPrefab;
     [SerializeField] private Transform _targetGemPrefabParent;
-    public Dictionary<GemType, int> Target = new();
+    public Dictionary<GemType, TargetGem> Target = new();
 
     private void Awake()
     {
@@ -33,14 +33,18 @@ public class GameFinishTaskGenerator : MonoBehaviour
     {
         for (int i = 0; i < gameLevel; i++)
         {
-            GameObject targetGem = Instantiate(_targetGemPrefab, _targetGemPrefabParent.transform.position, Quaternion.identity, _targetGemPrefabParent);
-            Image targetGemImage = targetGem.GetComponent<Image>();
+            GameObject targetGemGameObject = Instantiate(_targetGemPrefab, _targetGemPrefabParent.transform.position, Quaternion.identity, _targetGemPrefabParent);
+            
+            Image targetGemImage = targetGemGameObject.GetComponent<Image>();
             targetGemImage.sprite = sortedGemTypes[i].Sprite;
 
-            int targetAmount = (int)sortedGemTypes[i].Weight * Random.Range(1, 10);
-            TextMeshProUGUI targetAmountText = targetGem.GetComponentInChildren<TextMeshProUGUI>();
+            int targetAmount = (int)sortedGemTypes[i].Weight * Random.Range(1, 7);
+            TextMeshProUGUI targetAmountText = targetGemGameObject.GetComponentInChildren<TextMeshProUGUI>();
             targetAmountText.text = targetAmount.ToString();
-            Target.Add(sortedGemTypes[i], targetAmount);
+
+            TargetGem targetGemObject = new TargetGem(targetGemGameObject, targetGemImage, sortedGemTypes[i].Sprite, targetAmount, targetAmountText);
+
+            Target.Add(sortedGemTypes[i], targetGemObject);
         }
     }
 
@@ -61,6 +65,7 @@ public class GameFinishTaskGenerator : MonoBehaviour
     private void SetSwapAmount()
     {
         GameManager.Instance.SwapAmount = 15 / GameManager.Instance.Level;
+        Match3Events.UpdateSwapAmountText.Invoke(GameManager.Instance.SwapAmount);
     }
 
 }

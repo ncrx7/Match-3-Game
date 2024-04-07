@@ -96,17 +96,35 @@ public class FindMatchesManager : MonoBehaviour
         return _matches;
     }
 
-    private void CheckTargetGem(ref Dictionary<GemType, int> targetTasks, HashSet<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid)
+    private void CheckTargetGem(ref Dictionary<GemType, TargetGem> targetTasks, HashSet<Vector2Int> matches, GridSystem2D<GridObject<Gem>> grid)
     {
         foreach (var item in matches)
         {
             GemType gemTypeFromHash = grid.GetValue(item.x, item.y).GetValue().GetGemType();
             if(targetTasks.ContainsKey(gemTypeFromHash))
             {
-                Debug.Log("gem task value for: " + gemTypeFromHash.name + "  :" + targetTasks[gemTypeFromHash]);
-                targetTasks[gemTypeFromHash]--; 
-                if(targetTasks[gemTypeFromHash] < 0) targetTasks[gemTypeFromHash] = 0;
-                Debug.Log("gem task value after for: " + gemTypeFromHash.name + "  :" + targetTasks[gemTypeFromHash]);
+                //Debug.Log("gem task value for: " + gemTypeFromHash.name + "  :" + targetTasks[gemTypeFromHash].TargetAmount);
+                targetTasks[gemTypeFromHash].TargetAmount--; 
+                
+                if(targetTasks[gemTypeFromHash].TargetAmount < 0) targetTasks[gemTypeFromHash].TargetAmount= 0;
+
+                Match3Events.UpdateTaskGemRemainAmountText?.Invoke(targetTasks[gemTypeFromHash].TargetAmount, targetTasks[gemTypeFromHash].TextObject);
+
+                if(targetTasks[gemTypeFromHash].TargetAmount == 0)
+                {
+                    targetTasks[gemTypeFromHash].TargetGemPrefab.SetActive(false);
+                    //targetTasks[gemTypeFromHash].TargetGemImage.enabled = false;
+                    //targetTasks[gemTypeFromHash].TextObject.enabled = false;
+                    targetTasks.Remove(gemTypeFromHash);
+                    //Debug.Log("targetTask count: " + targetTasks.Count);
+
+                    if(targetTasks.Count == 0)
+                    {
+                        Match3Events.OnGameFinishedSuccessfully?.Invoke(GameManager.Instance.Score, GameManager.Instance.HighScore);
+                        Debug.Log("Game Over!!!!!!!");
+                    }
+                }
+                //Debug.Log("gem task value after for: " + gemTypeFromHash.name + "  :" + targetTasks[gemTypeFromHash].TargetAmount);
             }
         }
 
