@@ -23,10 +23,20 @@ public class GameFinishTaskGenerator : MonoBehaviour
         Instance = this;
     }
 
+    private void OnEnable()
+    {
+        Match3Events.CreateInitialTask += CreateFinishTask;
+    }
+
+    private void OnDisable()
+    {
+        Match3Events.CreateInitialTask -= CreateFinishTask;
+    }
+
     private void Start()
     {
         SetSwapAmount();
-        CreateFinishTask(GameManager.Instance.Level, GetSortedGemWeights(GameManager.Instance.GemTypes));
+        //CreateFinishTask(GameManager.Instance.Level, GetSortedGemWeights(GameManager.Instance.GemTypes)); // we cant use this here because couldnt synchron with game level.
     }
 
     private void CreateFinishTask(int gameLevel, List<GemType> sortedGemTypes)
@@ -48,7 +58,7 @@ public class GameFinishTaskGenerator : MonoBehaviour
         }
     }
 
-    private List<GemType> GetSortedGemWeights(GemType[] gemTypes)
+    public List<GemType> GetSortedGemWeights(GemType[] gemTypes)
     {
         List<GemType> sortedWeight = new();
 

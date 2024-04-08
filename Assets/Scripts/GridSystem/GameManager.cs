@@ -63,7 +63,10 @@ public class GameManager : MonoBehaviour
         //TODO: SET LEVEL FROM DATABASE
         var result = await Database.GetLevel() ;
         Level = result.Item;
+        Debug.Log("lv from gm:" + Level);
         Match3Events.UpdateLevelText?.Invoke(Level);
+
+        Match3Events.CreateInitialTask?.Invoke(Level, GameFinishTaskGenerator.Instance.GetSortedGemWeights(GemTypes));
     }
 
     private void OnDestroy()
