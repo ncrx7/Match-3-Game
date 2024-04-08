@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core;
 using DG.Tweening;
+using Services.Firebase.Database;
 using UnityEngine;
 using Utils.Extensions;
 
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     [SerializeField] public int SwapAmount {get; set;}
-    public int Level {get; private set;} = 5;
+    public int Level {get; set;} = 5;
     public int Score {get; set;}
     public int HighScore {get; set;}
     public bool LevelPassed {get; set;}
@@ -52,13 +53,16 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    private async void Start()
     {
         _gemPoolId = ObjectPooler.CreatePool(_gemPrefab, 100);
         InitializeGridAndGems();
         InputReader.Instance.Fire += OnSelectGem; // when mouse 1 clicked
         Match3Events.RepeatGameActions += HandleGameActions;
+
         //TODO: SET LEVEL FROM DATABASE
+        var result = await Database.GetLevel() ;
+        Level = result.Item;
         Match3Events.UpdateLevelText?.Invoke(Level);
     }
 

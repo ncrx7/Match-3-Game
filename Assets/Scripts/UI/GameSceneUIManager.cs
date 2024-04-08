@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Services.Firebase.Database;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -82,9 +83,9 @@ public class GameSceneUIManager : MonoBehaviour
     {
         //TODO: Level arttır
         Time.timeScale = 1;
+
         PauseMenu.SetActive(false);
         InGameMenu.SetActive(true);
-        //TODO: Sahneyi yeniden başlat
     }
 
     public void MainMenuButton()
@@ -102,6 +103,17 @@ public class GameSceneUIManager : MonoBehaviour
     {
         SettingsMenu.SetActive(false);
         PauseMenu.SetActive(true);
+    }
+
+    public async void NextLevelButton()
+    {
+        GameManager.Instance.Level++;
+        Debug.Log("LVL: " + GameManager.Instance.Level);
+        await Database.SaveLevel(GameManager.Instance.Level);
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; 
+        SceneManager.LoadScene(0);
+        //TODO: Sahneyi yeniden başlat
     }
 
     //TODO: Text güncellemeleri tek bir action ve ona abone olan fonksiyon ile yapılabilir.
