@@ -8,6 +8,7 @@ namespace Utils.Extensions
     {
         public static bool DontDestroyOnLoadIfSingle<T>(this GameObject target) where T : Object
         {
+            target.transform.SetParent(null);
             if (Object.FindObjectsOfType<T>().Length > 1)
             {
                 Object.Destroy(target);

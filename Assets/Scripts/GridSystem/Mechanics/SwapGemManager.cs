@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using DG.Tweening;
+using Utils.BaseClasses;
 
-public class SwapGemManager : MonoBehaviour
+public class SwapGemManager : DontDestroyOnLoadObjects<SwapGemManager>
 {
     private void OnEnable()
     {
