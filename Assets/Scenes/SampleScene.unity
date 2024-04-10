@@ -1252,7 +1252,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InGameMenu: {fileID: 165991649}
   PauseMenu: {fileID: 1151800414}
-  RestartMenu: {fileID: 0}
+  RestartMenu: {fileID: 7426509150684108717, guid: 169a36e60649d9e4ba8c2f6ee3a80422,
+    type: 3}
   SettingsMenu: {fileID: 400015149}
   WinMenu: {fileID: 7350443654230775110}
   LoseMenu: {fileID: 33955290}
