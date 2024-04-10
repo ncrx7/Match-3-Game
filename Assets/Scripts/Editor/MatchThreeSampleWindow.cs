@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Services.Firebase;
+using Services.Firebase.Database;
 using UnityEditor;
 using UnityEngine;
 
@@ -36,7 +37,7 @@ namespace Editor
             window.ShowUtility();
         }
         
-        private void OnGUI()
+        private async void OnGUI()
         {
             if (_logo == null) 
                 _logo = Resources.Load("velo_blue_logo") as Texture2D;
@@ -65,6 +66,12 @@ as an example using Firebase services.");
             Button(LocalDatabase.WelcomePanelIsActive, LocalDatabase.WelcomePanelIsActive ? "Welcome window does not open with InitializeOnLoad"
                     : "Welcome window does open with InitializeOnLoad",
                 "Welcome window opens automatically", () => {LocalDatabase.WelcomePanelIsActive = !LocalDatabase.WelcomePanelIsActive;});
+            
+            GUILayout.Space(15);
+            if (GUILayout.Button("Reset Test User"))
+                Database.ResetTestUser();
+            
+            GUILayout.Space(10);
             
             GUILayout.FlexibleSpace();
             Header("Developed By");

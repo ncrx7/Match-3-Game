@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core;
 using Firebase.Database;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace Services.Firebase.Database
             Success = false,
             Cause = "User authentication required!"
         };
-        
+
         private static readonly FirebaseResult<int> _authRequiredResultInt = new FirebaseResult<int>()
         {
             Success = false,
@@ -51,7 +52,7 @@ namespace Services.Firebase.Database
                 // Check if the user is authenticated
                 if (!Authentication.IsAuth)
                     return _authRequiredResultInt;
-                
+
                 // Retrieve the high score data from the database
                 var highScoreData = await DbReference.Child("users").Child(Authentication.User.UserId).Child("HighScore").GetValueAsync();
 
@@ -94,7 +95,7 @@ namespace Services.Firebase.Database
                 // Check if the user is authenticated
                 if (!Authentication.IsAuth)
                     return _authRequiredResultInt;
-                
+
                 // Save the high score data to the database
                 await DbReference.Child("users").Child(Authentication.User.UserId).Child("HighScore").SetValueAsync(highScore);
 
@@ -127,7 +128,7 @@ namespace Services.Firebase.Database
                 // Check if the user is authenticated
                 if (!Authentication.IsAuth)
                     return _authRequiredResultInt;
-                
+
                 // Retrieve the level data from the database
                 var levelData = await DbReference.Child("users").Child(Authentication.User.UserId).Child("Level").GetValueAsync();
 
@@ -170,10 +171,11 @@ namespace Services.Firebase.Database
                 // Check if the user is authenticated
                 if (!Authentication.IsAuth)
                     return _authRequiredResultInt;
-                
+
                 // Save the level data to the database
                 await DbReference.Child("users").Child(Authentication.User.UserId).Child("Level").SetValueAsync(level);
 
+                User.Level = level;
                 // Return a result indicating successful saving
                 return new FirebaseResult<int>()
                 {
@@ -197,10 +199,10 @@ namespace Services.Firebase.Database
         /// </summary>
         /// <param name="user">The UserModel object containing user data to be saved.</param>
         /// <returns>A FirebaseResult containing the success status and the saved UserModel object if successful, or an error message if unsuccessful.</returns>
-        public static async Task<FirebaseResult<UserModel>> SaveUser(UserModel user)
+        public static async Task<FirebaseResult<UserModel>> SaveUser(UserModel user, bool authFilter = true)
         {
             // Check if the user is authenticated
-            if (!Authentication.IsAuth)
+            if (!Authentication.IsAuth && authFilter)
                 return _authRequiredResultUser;
 
             try
@@ -243,7 +245,7 @@ namespace Services.Firebase.Database
                 // Check if the user is authenticated
                 if (!Authentication.IsAuth)
                     return _authRequiredResultUser;
-                
+
                 // Get the user data from the Firebase database
                 var serverData = await DbReference.Child("users").Child(Authentication.User.UserId).GetValueAsync();
                 var jsonData = serverData.GetRawJsonValue();
@@ -277,6 +279,21 @@ namespace Services.Firebase.Database
                 };
             }
         }
+        /// <summary>
+        /// For Editor. Reset test user.
+        /// </summary>
+        public static async void ResetTestUser()
+        {
+            await FirebaseMemory.Initialize();
+            await Authentication.LoginWithTestUser();
+            await SaveUser(new UserModel()
+            {
+                UserName = "TestUser",
+                Level = 1,
+                HighScore = 0
+            }, false);
+            FirebaseMemory.Reset();
+        }
 
         /// <summary>
         /// Handles the database exception and returns the error message.
@@ -291,6 +308,5 @@ namespace Services.Firebase.Database
             // Return the error message from the DatabaseException object
             return exception.Message;
         }
-
     }
 }

@@ -128,7 +128,7 @@ namespace Services.Firebase
                 {
                     //Call the Firebase auth update user profile function passing the profile with the username
                     await User.UpdateUserProfileAsync(profile);
-                    await Database.Database.SaveUser(new UserModel() {UserName = "TestUser", Level = 1, HighScore = 0});
+                    await Database.Database.SaveUser(new UserModel() {UserName = username, Level = 1, HighScore = 0});
                     return new FirebaseResult<FirebaseUser>() {Success = true, Item = User};
                 }
                 catch (Exception ex)
