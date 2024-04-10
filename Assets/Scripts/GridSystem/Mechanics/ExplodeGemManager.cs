@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
+using Utils.BaseClasses;
 
-public class ExplodeGemManager : MonoBehaviour
+public class ExplodeGemManager : DontDestroyOnLoadObjects<ExplodeGemManager>
 {
     [SerializeField] GameObject _explosion;
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,12 +26,14 @@ public class GameFinishTaskGenerator : MonoBehaviour
 
     private void OnEnable()
     {
-        Match3Events.CreateInitialTask += CreateFinishTask;
+        Match3Events.CreateGameTask += CreateFinishTask;
+        Match3Events.LaunchTheGame += RefreshTaskDictionary;
     }
 
     private void OnDisable()
     {
-        Match3Events.CreateInitialTask -= CreateFinishTask;
+        Match3Events.CreateGameTask -= CreateFinishTask;
+        Match3Events.LaunchTheGame -= RefreshTaskDictionary;
     }
 
     private void Start()
@@ -39,6 +42,7 @@ public class GameFinishTaskGenerator : MonoBehaviour
         //CreateFinishTask(GameManager.Instance.Level, GetSortedGemWeights(GameManager.Instance.GemTypes)); // we cant use this here because couldnt synchron with game level.
     }
 
+    //TODO: Upgrade create task algorithm
     private void CreateFinishTask(int gameLevel, List<GemType> sortedGemTypes)
     {
         for (int i = 0; i < gameLevel; i++)
@@ -48,7 +52,7 @@ public class GameFinishTaskGenerator : MonoBehaviour
             Image targetGemImage = targetGemGameObject.GetComponent<Image>();
             targetGemImage.sprite = sortedGemTypes[i].Sprite;
 
-            int targetAmount = (int)sortedGemTypes[i].Weight * Random.Range(1, 7);
+            int targetAmount = (int)sortedGemTypes[i].Weight * UnityEngine.Random.Range(3, 7);
             TextMeshProUGUI targetAmountText = targetGemGameObject.GetComponentInChildren<TextMeshProUGUI>();
             targetAmountText.text = targetAmount.ToString();
 
@@ -56,6 +60,8 @@ public class GameFinishTaskGenerator : MonoBehaviour
 
             Target.Add(sortedGemTypes[i], targetGemObject);
         }
+
+        //callback?.Invoke();
     }
 
     public List<GemType> GetSortedGemWeights(GemType[] gemTypes)
@@ -72,9 +78,15 @@ public class GameFinishTaskGenerator : MonoBehaviour
         return sortedWeight;
     }
 
+    public void RefreshTaskDictionary(Action callback)
+    {
+        Target.Clear();
+        callback?.Invoke();
+    }
+
     private void SetSwapAmount()
     {
-        GameManager.Instance.SwapAmount = 15 / GameManager.Instance.Level;
+        GameManager.Instance.SwapAmount = 15 / 1; // / GameManager.Instance.Level
         Match3Events.UpdateSwapAmountText.Invoke(GameManager.Instance.SwapAmount);
     }
 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
+using Utils.BaseClasses;
 
-public class FallGemsManager : MonoBehaviour
+public class FallGemsManager : DontDestroyOnLoadObjects<FallGemsManager>
 {
     private void OnEnable()
     {

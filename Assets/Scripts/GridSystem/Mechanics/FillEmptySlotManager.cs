@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils.BaseClasses;
 
-public class FillEmptySlotManager : MonoBehaviour
+public class FillEmptySlotManager : DontDestroyOnLoadObjects<FillEmptySlotManager>
 {
     private void OnEnable()
     {
