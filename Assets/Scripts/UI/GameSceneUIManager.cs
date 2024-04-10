@@ -31,8 +31,8 @@ public class GameSceneUIManager : MonoBehaviour
     {
         Match3Events.UpdateTaskGemRemainAmountText += UpdateTargetGemAmountText;
         Match3Events.UpdateScoreText += UpdateScoreText;
-        Match3Events.OnGameFinishedSuccessfully += GameFinishedSuccessfully;
-        Match3Events.OnGameFinishedUnsuccessfully += GameFinishedUnsuccessfully;
+        Match3Events.OnGameFinishedSuccessfully += OnGameFinishedSuccessfully;
+        Match3Events.OnGameFinishedUnsuccessfully += OnGameFinishedUnsuccessfully;
         Match3Events.UpdateSwapAmountText += UpdateSwapAmountText;
         Match3Events.UpdateLevelText += UpdateLevelText;
     }
@@ -41,8 +41,8 @@ public class GameSceneUIManager : MonoBehaviour
     {
         Match3Events.UpdateTaskGemRemainAmountText -= UpdateTargetGemAmountText;
         Match3Events.UpdateScoreText -= UpdateScoreText;
-        Match3Events.OnGameFinishedSuccessfully -= GameFinishedSuccessfully;
-        Match3Events.OnGameFinishedUnsuccessfully -= GameFinishedUnsuccessfully;
+        Match3Events.OnGameFinishedSuccessfully -= OnGameFinishedSuccessfully;
+        Match3Events.OnGameFinishedUnsuccessfully -= OnGameFinishedUnsuccessfully;
         Match3Events.UpdateSwapAmountText -= UpdateSwapAmountText;
         Match3Events.UpdateLevelText -= UpdateLevelText;
     }
@@ -110,6 +110,7 @@ public class GameSceneUIManager : MonoBehaviour
         GameManager.Instance.Level++;
         Debug.Log("LVL: " + GameManager.Instance.Level);
         await Database.SaveLevel(GameManager.Instance.Level);
+        await Database.SaveHighScore(GameManager.Instance.HighScore); //the game has finished succesfully for updating gamemanager highscore
 
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; 
         SceneManager.LoadScene(0);
@@ -139,7 +140,7 @@ public class GameSceneUIManager : MonoBehaviour
         _scoreInGameText.text = score.ToString();
     }
 
-    private void GameFinishedSuccessfully(int score, int highScore)
+    private void OnGameFinishedSuccessfully(int score, int highScore)
     {
         GameManager.Instance.LevelPassed = true;
         SwapAmountPanel.SetActive(false);
@@ -151,7 +152,8 @@ public class GameSceneUIManager : MonoBehaviour
         _scoreWinPanelText.text = score.ToString();
         if (score > highScore)
         {
-            _highScoreText.text = score.ToString();
+            GameManager.Instance.HighScore = score;
+            _highScoreText.text = GameManager.Instance.HighScore.ToString();
             return;
         }
 
@@ -159,7 +161,7 @@ public class GameSceneUIManager : MonoBehaviour
 
     }
 
-    private void GameFinishedUnsuccessfully() 
+    private void OnGameFinishedUnsuccessfully() 
     {
         GameManager.Instance.LevelPassed = false;
         SwapAmountPanel.SetActive(false);

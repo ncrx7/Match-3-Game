@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Security;
+using System.Threading.Tasks;
 using Core;
 using DG.Tweening;
+using Services.Firebase;
 using Services.Firebase.Database;
 using UnityEngine;
 using Utils.Extensions;
@@ -11,11 +14,11 @@ using Utils.Extensions;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    [SerializeField] public int SwapAmount {get; set;}
-    public int Level {get; set;} = 5;
-    public int Score {get; set;}
-    public int HighScore {get; set;}
-    public bool LevelPassed {get; set;}
+    [SerializeField] public int SwapAmount { get; set; }
+    public int Level { get; set; } = 5;
+    public int Score { get; set; }
+    public int HighScore { get; set; }
+    public bool LevelPassed { get; set; }
 
     [Header("Grid Settings")]
     [SerializeField] int _width = 8;
@@ -61,11 +64,17 @@ public class GameManager : MonoBehaviour
         Match3Events.RepeatGameActions += HandleGameActions;
 
         //TODO: SET LEVEL FROM DATABASE
-        var result = await Database.GetLevel() ;
-        Level = result.Item;
-        Debug.Log("lv from gm:" + Level);
-        Match3Events.UpdateLevelText?.Invoke(Level);
+        /*         var resultLevel = await Database.GetLevel() ;
+                var resultHighScore = await Database.GetHighScore();
+                Level = resultLevel.Item;
+                HighScore = resultHighScore.Item;
+                Debug.Log("lv from gm: " + Level);
+                Debug.Log("hs from gm: " + HighScore); */
+        
 
+        await InitializeDatabaseDataAsync();
+
+        Match3Events.UpdateLevelText?.Invoke(Level);
         Match3Events.CreateInitialTask?.Invoke(Level, GameFinishTaskGenerator.Instance.GetSortedGemWeights(GemTypes));
     }
 
@@ -74,7 +83,33 @@ public class GameManager : MonoBehaviour
         InputReader.Instance.Fire -= OnSelectGem;
         Match3Events.RepeatGameActions -= HandleGameActions;
     }
-    
+
+    async Task InitializeDatabaseDataAsync()
+    {
+        Debug.Log("is auth !: " + Authentication.IsAuth);
+        while (!Authentication.IsAuth)
+        {
+            Debug.Log("is auth ?: " + Authentication.IsAuth);
+            await Task.Delay(500); // Bekleme için Task.Delay kullanabilirsiniz
+        }
+
+        var taskLevel = Database.GetLevel();
+        var taskHighScore = Database.GetHighScore();
+
+        await Task.WhenAll(taskLevel, taskHighScore); 
+
+        if (taskLevel.IsFaulted || taskHighScore.IsFaulted)
+        {
+            Debug.LogError("Database initialization failed.");
+            return;
+        }
+
+        Level = taskLevel.Result.Item;
+        HighScore = taskHighScore.Result.Item;
+        //Debug.Log("lv from gm: " + Level);
+        //Debug.Log("hs from gm: " + HighScore);
+    }
+
     // when mouse 1 clicked
     void OnSelectGem()
     {
@@ -129,11 +164,11 @@ public class GameManager : MonoBehaviour
             {
                 Match3Events.OnGameFinishedUnsuccessfully?.Invoke();
                 return;
-            } 
+            }
 
             if (matches.Count == 0) return;
             Debug.Log("mathces count above repeat: " + matches.Count);
-            
+
             Match3Events.RepeatGameActions.Invoke(new Vector2Int(0, 0), new Vector2Int(0, 0)); //if there are matches after all process, repeat the procoess until no match is found
         };
 
