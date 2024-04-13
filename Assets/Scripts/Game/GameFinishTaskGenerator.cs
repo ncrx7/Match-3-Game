@@ -28,19 +28,21 @@ public class GameFinishTaskGenerator : MonoBehaviour
     {
         Match3Events.CreateGameTask += CreateFinishTask;
         Match3Events.LaunchTheGame += RefreshTaskDictionary;
+        Match3Events.SetSwapAmount += SetSwapAmount;
     }
 
     private void OnDisable()
     {
         Match3Events.CreateGameTask -= CreateFinishTask;
         Match3Events.LaunchTheGame -= RefreshTaskDictionary;
+        Match3Events.SetSwapAmount -= SetSwapAmount;
     }
 
-    private void Start()
+/*     private void Start()
     {
-        SetSwapAmount();
+        //SetSwapAmount();
         //CreateFinishTask(GameManager.Instance.Level, GetSortedGemWeights(GameManager.Instance.GemTypes)); // we cant use this here because couldnt synchron with game level.
-    }
+    } */
 
     //TODO: Upgrade create task algorithm
     private void CreateFinishTask(int gameLevel, List<GemType> sortedGemTypes)
@@ -86,7 +88,12 @@ public class GameFinishTaskGenerator : MonoBehaviour
 
     private void SetSwapAmount()
     {
-        GameManager.Instance.SwapAmount = 15 / 1; // / GameManager.Instance.Level
+        float multiplier = GameManager.Instance.Level * 0.42f;
+        Debug.Log("level from game finish: " + GameManager.Instance.Level);
+        Debug.Log("(int)Mathf.Round(multiplier)" + (int)Math.Ceiling(multiplier));
+        int swapAmount = 20 / (int)Math.Ceiling(multiplier);;
+        Debug.Log("swap amount: " + swapAmount);
+        GameManager.Instance.SwapAmount = swapAmount ; 
         Match3Events.UpdateSwapAmountText.Invoke(GameManager.Instance.SwapAmount);
     }
 

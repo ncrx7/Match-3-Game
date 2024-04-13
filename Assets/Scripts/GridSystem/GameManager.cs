@@ -75,7 +75,8 @@ public class GameManager : MonoBehaviour
         await InitializeDatabaseDataAsync();
 
         Match3Events.UpdateLevelText?.Invoke(Level);
-       Match3Events.CreateGameTask?.Invoke(Level, GameFinishTaskGenerator.Instance.GetSortedGemWeights(GemTypes));
+        Match3Events.CreateGameTask?.Invoke(Level, GameFinishTaskGenerator.Instance.GetSortedGemWeights(GemTypes));
+        Match3Events.SetSwapAmount?.Invoke();
     }
 
     private void OnDestroy()
