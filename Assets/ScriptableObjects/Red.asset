@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc64b28850ca0b842bbfbfc63c0a8209, type: 3}
   m_Name: Red
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 166696a1c0bb29445a5016b1b2f462d2, type: 3}
+  Sprite: {fileID: 21300000, guid: 99fc7e2169af7d843b8bb56432ed867d, type: 3}
+  Weight: 2

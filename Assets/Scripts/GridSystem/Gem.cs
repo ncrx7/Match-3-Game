@@ -5,16 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Gem : MonoBehaviour 
 {
-    public GemType type;
+    public GemType Type;
 
     public void SetGemType(GemType type)
     {
-        this.type = type;
-        GetComponent<SpriteRenderer>().sprite = type.sprite;
+        this.Type = type;
+        GetComponent<SpriteRenderer>().sprite = type.Sprite;
     }
 
     public GemType GetGemType()
     {
-        return type;
+        return Type;
+    }
+
+    public void DestroyGem()
+    {
+        Destroy(gameObject);
     }
 }

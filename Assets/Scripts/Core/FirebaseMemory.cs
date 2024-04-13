@@ -4,6 +4,7 @@ using Firebase.Crashlytics;
 using Firebase.Extensions;
 using Managers;
 using Services.Firebase;
+using Services.Firebase.Database;
 using UnityEngine;
 using Utils.BaseClasses;
 
@@ -11,16 +12,16 @@ namespace Core
 {
     public static class FirebaseMemory
     {
-        public static DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
-        public static bool firebaseInitialized = false;
+        public static DependencyStatus DependencyStatus = DependencyStatus.UnavailableOther;
+        public static bool FirebaseInitialized = false;
         public static FirebaseManager FirebaseManager;
         public static FirebaseApp App;
 
         public static async Task Initialize()
         {
             await FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
-                dependencyStatus = task.Result;
-                if (dependencyStatus == DependencyStatus.Available)
+                DependencyStatus = task.Result;
+                if (DependencyStatus == DependencyStatus.Available)
                 {
                     App = FirebaseApp.DefaultInstance;
 
@@ -32,21 +33,25 @@ namespace Core
                     Authentication.Initialize();
                     Analytics.Initialize();
 
-                    firebaseInitialized = true;
+                    FirebaseInitialized = true;
                 }
                 else
                 {
-                    Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    Debug.LogError("Could not resolve all Firebase dependencies: " + DependencyStatus);
                 }
             });
         }
 
         public static void Reset()
         {
-            dependencyStatus = DependencyStatus.UnavailableDisabled;
-            firebaseInitialized = false;
+            DependencyStatus = DependencyStatus.UnavailableDisabled;
+            FirebaseInitialized = false;
             FirebaseManager = null;
             App = null;
+            
+            Database.Reset();
+            Authentication.Reset();
+            Analytics.Reset();
         }
     }
 }

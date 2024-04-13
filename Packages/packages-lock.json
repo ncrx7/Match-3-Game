@@ -15,21 +15,23 @@
         "com.unity.modules.uielements": "1.0.0"
       }
     },
-    "com.unity.ai.navigation": {
-      "version": "1.1.5",
+<<<<<<< Updated upstream
+=======
+    "com.unity.ads": {
+      "version": "4.4.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.ai": "1.0.0"
+        "com.unity.ugui": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
+>>>>>>> Stashed changes
     "com.unity.analytics": {
-      "version": "3.8.1",
+      "version": "3.6.12",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.services.analytics": "1.0.4",
         "com.unity.ugui": "1.0.0"
       },
       "url": "https://packages.unity.com"
@@ -45,7 +47,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.2.0",
+      "version": "2.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -59,7 +61,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.27",
+      "version": "3.0.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -99,6 +101,8 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+<<<<<<< Updated upstream
+=======
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.2.1",
       "depth": 2,
@@ -107,7 +111,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.purchasing": {
-      "version": "4.9.3",
+      "version": "4.6.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -116,10 +120,12 @@
         "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.modules.androidjni": "1.0.0",
-        "com.unity.services.core": "1.8.1"
+        "com.unity.services.core": "1.5.2",
+        "com.unity.services.analytics": "4.2.0"
       },
       "url": "https://packages.unity.com"
     },
+>>>>>>> Stashed changes
     "com.unity.render-pipelines.core": {
       "version": "14.0.10",
       "depth": 1,
@@ -132,7 +138,7 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "14.0.10",
+      "version": "12.1.10",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
@@ -158,6 +164,8 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+<<<<<<< Updated upstream
+=======
     "com.unity.services.analytics": {
       "version": "5.0.0",
       "depth": 1,
@@ -180,25 +188,7 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.services.mediation": {
-      "version": "1.0.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.settings-manager": "1.0.3",
-        "com.unity.modules.ui": "1.0.0",
-        "com.unity.services.core": "1.4.0",
-        "com.unity.ugui": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.settings-manager": {
-      "version": "2.0.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
+>>>>>>> Stashed changes
     "com.unity.shadergraph": {
       "version": "14.0.10",
       "depth": 1,
@@ -209,7 +199,7 @@
       }
     },
     "com.unity.test-framework": {
-      "version": "1.1.33",
+      "version": "1.1.31",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -229,7 +219,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.7.6",
+      "version": "1.6.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {

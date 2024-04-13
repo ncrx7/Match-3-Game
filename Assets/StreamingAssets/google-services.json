@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "913664833962",
+    "firebase_url": "https://matchtreesample-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "matchtreesample",
+    "storage_bucket": "matchtreesample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913664833962:android:af36d6155a3951662193d3",
+        "android_client_info": {
+          "package_name": "com.samplecompany.matchthreesample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg7DcNTYARuzc7-1bDNyvSCmEdOf3Sj9A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
