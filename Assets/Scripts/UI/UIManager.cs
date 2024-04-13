@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
             Instance = this;
         }
         
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
     private void Start()
@@ -42,17 +42,28 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void PlayButton()
+    public void ContinueButton()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void StageMenuButton()
     {
         MainMenu.SetActive(false);
         StageMenu.SetActive(true);
         
     }
 
-    public void ReturnButton()
+    public void ReturnFromSettingsButton()
     {
         MainMenu.SetActive(true);
         SettingsMenu.SetActive(false);
+    }
+
+    public void ReturnFromStageButton()
+    {
+        MainMenu.SetActive(true);
+        StageMenu.SetActive(false);
     }
 
     public void SettingsButton()
@@ -73,6 +84,7 @@ public class UIManager : MonoBehaviour
     }
 
     /*
+    TODO// TEK METHOD
     public void InGameMainMenuButton()
     {
         SceneManager.LoadScene("MainScene");

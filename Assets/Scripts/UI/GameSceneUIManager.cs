@@ -118,6 +118,11 @@ public class GameSceneUIManager : MonoBehaviour
         //TODO: Sahneyi yeniden başlat
     }
 
+    public void RestartButton()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     //TODO: Text güncellemeleri tek bir action ve ona abone olan fonksiyon ile yapılabilir.
     private void UpdateLevelText(int level)
     {
