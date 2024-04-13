@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
 
     GridSystem2D<GridObject<Gem>> _grid;
     private bool _isProcessing;
+    public bool IsPausedGame { get; set;}
     Vector2Int selectedGem = Vector2Int.one * -1;
     private int _gemPoolId;
 
@@ -114,7 +115,7 @@ public class GameManager : MonoBehaviour
     // when mouse 1 clicked
     void OnSelectGem()
     {
-        if (!_isProcessing && SwapAmount > 0)
+        if (!_isProcessing && !IsPausedGame && SwapAmount > 0)
         {
             var gridPos = _grid.GetXY(Camera.main.ScreenToWorldPoint(InputReader.Instance.Selected)); //TODO: make inputreader class singleton
 

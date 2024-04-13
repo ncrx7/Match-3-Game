@@ -74,6 +74,7 @@ public class GameSceneUIManager : MonoBehaviour
     public void PauseButton()
     {
         Debug.Log("pressed pause button");
+        GameManager.Instance.IsPausedGame = true;
         Time.timeScale = 0;
         InGameMenu.SetActive(false);
         PauseMenu.SetActive(true);
@@ -81,11 +82,11 @@ public class GameSceneUIManager : MonoBehaviour
 
     public void ContinueButton()
     {
-        //TODO: Level arttır
         Time.timeScale = 1;
 
         PauseMenu.SetActive(false);
         InGameMenu.SetActive(true);
+        GameManager.Instance.IsPausedGame = false;
     }
 
     public void MainMenuButton()
