@@ -585,11 +585,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 597853494}
-    - target: {fileID: 6695739937366918514, guid: 68c8fcdcccdd5c34cb7fde7b7dc9eddb,
-        type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7171734249438468276, guid: 68c8fcdcccdd5c34cb7fde7b7dc9eddb,
         type: 3}
       propertyPath: m_Name
@@ -1993,34 +1988,9 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4411682179408984465, guid: 9a6b731ec4adde348a58334aa2c39c3d,
         type: 3}
-      propertyPath: m_Colors.m_HighlightedColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411682179408984465, guid: 9a6b731ec4adde348a58334aa2c39c3d,
-        type: 3}
-      propertyPath: m_Colors.m_HighlightedColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411682179408984465, guid: 9a6b731ec4adde348a58334aa2c39c3d,
-        type: 3}
-      propertyPath: m_Colors.m_HighlightedColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411682179408984465, guid: 9a6b731ec4adde348a58334aa2c39c3d,
-        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 597853494}
-    - target: {fileID: 4411682179408984465, guid: 9a6b731ec4adde348a58334aa2c39c3d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: NextLevelButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 5290931787478175153, guid: 9a6b731ec4adde348a58334aa2c39c3d,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -3.4999695
-      objectReference: {fileID: 0}
     - target: {fileID: 7220897247064807104, guid: 9a6b731ec4adde348a58334aa2c39c3d,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2130,11 +2100,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WinMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 9022170750310546635, guid: 9a6b731ec4adde348a58334aa2c39c3d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6b731ec4adde348a58334aa2c39c3d, type: 3}
