@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public GameObject MainMenu;
     public GameObject StageMenu;
     public GameObject SettingsMenu;
+    public GameObject LeaderBoardMenu;
     public static UIManager Instance { get; private set; }
 
     private void Awake()
@@ -40,6 +41,11 @@ public class UIManager : MonoBehaviour
         {
             StageMenu.SetActive(false);
         }
+
+        if(LeaderBoardMenu.activeInHierarchy == true)
+        {
+            LeaderBoardMenu.SetActive(false);
+        }
     }
 
     public void ContinueButton()
@@ -54,16 +60,28 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void ReturnFromSettingsButton()
+    public void ReturnFromSettingsMenuButton()
     {
         MainMenu.SetActive(true);
         SettingsMenu.SetActive(false);
     }
 
-    public void ReturnFromStageButton()
+    public void ReturnFromStageMenuButton()
     {
         MainMenu.SetActive(true);
         StageMenu.SetActive(false);
+    }
+
+    public void LeaderboardButton()
+    {
+        MainMenu.SetActive(false);
+        LeaderBoardMenu.SetActive(true);
+    }
+    
+    public void ReturnFromLeaderboardMenuButton()
+    {
+        MainMenu.SetActive(true);
+        LeaderBoardMenu.SetActive(false);
     }
 
     public void SettingsButton()
